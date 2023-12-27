@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word of Wisdom TCP Client UI</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Word of Wisdom TCP Client UI</h1>
+    <div class="mt-3">
+        <h2>Project Description</h2>
+        <p>Test task for Server engineer (Go):</p>
+        <ul>
+            <li>Design and implement “Word of Wisdom” tcp server.</li>
+            <li>TCP server should be protected from DDOS attacks with the Proof of Work (PoW). <a href="https://en.wikipedia.org/wiki/Proof_of_work">Proof of Work on Wikipedia</a>.</li>
+            <li>The choice of the PoW algorithm should be explained.</li>
+            <li>After Proof Of Work verification, server should send one of the quotes from “word of wisdom” book or any other collection of the quotes.</li>
+            <li>Docker file should be provided both for the server and for the client that solves the PoW challenge.</li>
+        </ul>
+
+        <h2>Implementation Details</h2>
+        <p>The project implements a TCP server in Go, which uses a Proof of Work algorithm to mitigate potential DDOS attacks. The server, upon successful PoW completion by a client, returns a quote from a collection of wisdom quotes. Both server and client are containerized using Docker for easy deployment and isolation.</p>
+
+        <h3>Loading Quotes from Data Directory</h3>
+        <p>The server dynamically loads quotes from a specified data directory. This directory can contain quotes in various file formats (JSON, YAML, TXT, CSV), allowing for flexible and easy updates to the collection of quotes without needing to modify the server's source code.</p>
+
+        <h3>About the Hashcash Algorithm</h3>
+        <p>The Hashcash algorithm is a proof-of-work system designed to limit email spam and denial-of-service attacks. It requires the requester to perform a moderate amount of computational work, thereby deterring frivolous or malicious uses of resources.</p>
+
+        <h4>Pros:</h4>
+        <ul>
+            <li><strong>Spam and Abuse Prevention:</strong> Helps in mitigating denial-of-service attacks and spam by requiring computational work.</li>
+            <li><strong>Adjustable Difficulty:</strong> The difficulty level can be altered to ensure adequate protection as computational power evolves.</li>
+        </ul>
+
+        <h4>Cons:</h4>
+        <ul>
+            <li><strong>Energy Consumption:</strong> Can be energy-intensive, especially at higher difficulty levels.</li>
+            <li><strong>Not Foolproof:</strong> Not entirely effective against attackers with significant computational resources.</li>
+        </ul>
+
+        <h4>Rationale for Choosing Hashcash:</h4>
+        <p>For this project, Hashcash was chosen due to its simplicity, ease of implementation, and effectiveness in providing a basic level of security against potential denial-of-service attacks. It serves as a deterrent against automated attacks by adding a computational cost to client requests.</p>
+
+        <h4>References:</h4>
+        <ul>
+            <li><a href="https://en.wikipedia.org/wiki/Hashcash">Hashcash on Wikipedia</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Proof_of_work">Proof of Work on Wikipedia</a></li>
+        </ul>
+    </div>
+    <h2>Client</h2>
+    <form id="connectForm" class="col-12 p-0 mt-3 row">
+        <div class="form-group col-6 pl-0">
+            <label for="host">Host</label>
+            <input type="text" class="form-control" id="host" value="server" required>
+        </div>
+        <div class="form-group col-6 pr-0">
+            <label for="port">Port</label>
+            <input type="text" class="form-control" id="port" value="7890" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Connect</button>
+    </form>
+    <div id="log" class="mt-3"></div>
+</div>
+
+<script>
+    document.getElementById('connectForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var host = document.getElementById('host').value;
+        var port = document.getElementById('port').value;
+
+        fetch('/connect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ host: host, port: port }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                var logDiv = document.getElementById('log');
+                logDiv.innerHTML = ''; // Clear previous logs
+                data.forEach(log => {
+                    var p = document.createElement('p');
+                    p.textContent = `[${log.Timestamp}] : ${log.Message}`;
+                    logDiv.appendChild(p);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+</body>
+</html>

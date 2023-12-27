@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    #volumes:
+    #  - /path/to/your/data/directory:/data
+    ports:
+      - "7890:7890"
+    environment:
+      - DIFFICULTY=20
+      - TIMEOUT=15s
+      - PORT=7890
+
+  client:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    ports:
+      - "7891:7891"
+    environment:
+      - TIMEOUT=15s
+      - PORT=7891
+    depends_on:
+      - server
