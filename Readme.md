@@ -3,6 +3,9 @@
 ## Project Overview
 This project involves the implementation of a "Word of Wisdom" TCP server, designed as a test task for Server Engineers skilled in Go. The server is fortified against DDOS attacks using a Proof of Work (PoW) mechanism and responds with wisdom quotes upon successful validation.
 
+
+Test link: http://45.153.185.127:7891/
+
 ## Features
 - **Proof of Work**: Implements a challenge-response protocol to protect against DDOS attacks. More details about PoW can be found on [Wikipedia](https://en.wikipedia.org/wiki/Proof_of_work).
 - **Quote Sharing**: Upon successful PoW completion, the server shares a quote from a curated collection of wisdom quotes.
